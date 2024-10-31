@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from matplotlib.patches import Circle, Rectangle, Arc
 import datetime
+import numpy
 # plt.style.use("seaborn-paper")
 
 
@@ -333,7 +334,85 @@ def compare_composite(methods):
                 lw=2,
                 label=method.name,
             )
-            
+    
+    ax_1.legend(fontsize=14)
+    ax_1.set_xlabel("#iterations", fontsize=14)
+    ax_1.set_ylabel("")
+    ax_1.set_ylabel(r"$f(\mathbf{x}^k) - f^\star$", fontsize=14)
+    ax_1.set_xscale("log")
+    ax_1.set_yscale("log")
+    ax_1.grid()
+
+    plt.show()
+
+
+
+def compare_composite_subG(methods):
+    M = np.diag(np.arange(1, 11))
+    f = Function(f=lambda u: 0.5*np.dot(u, np.dot(M, u)), grad=lambda u: np.dot(M, u), minimum=0.0, lips_grad=10.0, strng_cvx=1.0)
+    g = Function(f=lambda x: 30*np.sum(np.abs(x), axis=0), subgrad= lambda x: 30*np.sign(x), prox=lambda gamma, x: np.sign(x)*np.maximum(np.abs(x) - 30*gamma, 0.0))
+    composite_function = CompositeFunction(f = f, g=g, minimum=0.0)
+    maxiter = 1000
+    f, (ax_1) = plt.subplots(1, 1, figsize=(12, 4))
+
+    for method in methods:
+        x_zero = 100 * np.ones(10)
+        run_trace = run(method, composite_function, x_zero, maxiter)
+        
+        f.suptitle("COMPARISON WITH THEORETICAL BOUND", fontsize=14)
+
+        ax_1.plot(
+                range(maxiter),
+                np.array(run_trace.values) - composite_function.minimum,
+                lw=2,
+                label=method.name,
+            )
+        
+    dom = np.logspace(0, 3, 100)
+    C = 300
+    bigO = [C/np.sqrt(k) for k in dom]
+    ax_1.plot(dom, bigO, label=r"$\mathcal{O}(\frac{1}{\sqrt{k}})$", linestyle='--', c='black')
+    
+    ax_1.legend(fontsize=14)
+    ax_1.set_xlabel("#iterations", fontsize=14)
+    ax_1.set_ylabel("")
+    ax_1.set_ylabel(r"$f(\mathbf{x}^k) - f^\star$", fontsize=14)
+    ax_1.set_xscale("log")
+    ax_1.set_yscale("log")
+    ax_1.grid()
+
+    plt.show()
+
+
+
+
+def compare_composite_ISTA(methods):
+    M = np.diag(np.arange(1, 11))
+    f = Function(f=lambda u: 0.5*np.dot(u, np.dot(M, u)), grad=lambda u: np.dot(M, u), minimum=0.0, lips_grad=10.0, strng_cvx=1.0)
+    g = Function(f=lambda x: 30*np.sum(np.abs(x), axis=0), subgrad= lambda x: 30*np.sign(x), prox=lambda gamma, x: np.sign(x)*np.maximum(np.abs(x) - 30*gamma, 0.0))
+    composite_function = CompositeFunction(f = f, g=g, minimum=0.0)
+    maxiter = 1000
+    f, (ax_1) = plt.subplots(1, 1, figsize=(12, 4))
+
+    for method in methods:
+        x_zero = 100 * np.ones(10)
+        run_trace = run(method, composite_function, x_zero, maxiter)
+        
+        f.suptitle("COMPARISON WITH THEORETICAL BOUND", fontsize=14)
+
+        ax_1.plot(
+                range(maxiter),
+                np.array(run_trace.values) - composite_function.minimum,
+                lw=2,
+                label=method.name,
+            )
+        
+    dom = np.logspace(0, np.log10(25), 100)
+    C = 0.7
+    bigO = [10000*C**(2*k) for k in dom]
+    ax_1.plot(dom, bigO, label=r"$\mathcal{O}(C^k)$", linestyle='--', c='black')
+
+    
     ax_1.legend(fontsize=14)
     ax_1.set_xlabel("#iterations", fontsize=14)
     ax_1.set_ylabel("")
