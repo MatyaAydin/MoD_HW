@@ -80,6 +80,8 @@ class GanTrainer():
         """Save an image of the current generated samples"""
         with torch.no_grad():
             generated_images = g(self.fixed_noise)
+            #print(generated_images.shape)
+            #print(generated_images)
             visualize_images(generated_images, self.mode, epoch)  
 
 
