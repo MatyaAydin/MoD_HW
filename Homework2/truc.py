@@ -2,9 +2,9 @@ import numpy as np
 
 
 
-k1 = 8
-k2 = 4
-k3 = 5
+k1 = 0.5
+k2 = 0.3
+k3 = 0.2
 
 
 W_k = np.array([
@@ -22,8 +22,10 @@ W_hat = np.array([
 
 _, sigm_k, _ = np.linalg.svd(W_k)
 _, sigm_hat, _ = np.linalg.svd(W_hat)
+val, vec = np.linalg.eig(W_hat)
+W_k_norm = np.linalg.norm(W_k, 2)
+W_hat_norm = np.linalg.norm(W_hat, 2)
 
-print(sigm_k) #sqrt(36), sqrt(8), sqrt(8), sqrt(4) si k1 = 1, k2 = 2, k3 = 3
-print(sigm_hat) #sqrt(20), sqrt(8)
-
-#print(sigm_hat[0]/sigm_k[0])
+#print(W_hat_norm/W_k_norm)
+#print(1/np.sqrt(2))
+print(vec[0])
