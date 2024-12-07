@@ -5,4 +5,4 @@ from tqdm import tqdm
 from matplotlib.patches import Circle, Rectangle, Arc
 import time
 
-plt.style.use("seaborn-paper")
+#plt.style.use("seaborn-paper")
