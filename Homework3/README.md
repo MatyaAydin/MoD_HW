@@ -1,4 +1,4 @@
-# Mathematics of data: from theory to computation :Homework 3
+# Mathematics of data: from theory to computation: Homework 3
 
 ### Authors:
 **Adam Mesbahi** || **SCIPER**: 387382
