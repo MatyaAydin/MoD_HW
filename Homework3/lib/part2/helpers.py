@@ -22,7 +22,10 @@ def projSDP(Z, kappa):
 
     return u@np.diag(s)@u.T
     
-    
+def lmo(grad, kappa):
+    q, u = eigsh(grad, k=1, tol=1e-16, which='SA')
+    u = sqrt(kappa)*u
+    return np.outer(u,u) 
     
 ## FUNCTIONS FOR THE SDP ROUNDING
 def remap_centers(assign,k):
@@ -130,7 +133,7 @@ def value_kmeans(points, labels):
     count = np.zeros([k,], int)
     
     for i in range(k):
-        count[i] = np.int(np.sum(labels==(i)))
+        count[i] = int(np.sum(labels==(i))) #np.int
         
     idx = 0
     value = 0
